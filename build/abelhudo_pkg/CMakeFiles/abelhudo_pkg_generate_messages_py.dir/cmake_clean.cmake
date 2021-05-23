@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "/home/pi/abelhudo_ws/devel/lib/python2.7/dist-packages/abelhudo_pkg/msg/_Servo.py"
+  "/home/pi/abelhudo_ws/devel/lib/python2.7/dist-packages/abelhudo_pkg/msg/_Servo_msg.py"
   "/home/pi/abelhudo_ws/devel/lib/python2.7/dist-packages/abelhudo_pkg/msg/__init__.py"
   "CMakeFiles/abelhudo_pkg_generate_messages_py"
 )

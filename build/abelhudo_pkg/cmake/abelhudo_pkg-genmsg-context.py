@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo.msg"
+messages_str = "/home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo_msg.msg"
 services_str = ""
 pkg_name = "abelhudo_pkg"
 dependencies_str = "std_msgs"

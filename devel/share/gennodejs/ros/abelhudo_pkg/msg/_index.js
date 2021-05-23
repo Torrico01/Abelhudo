@@ -1,8 +1,8 @@
 
 "use strict";
 
-let Servo = require('./Servo.js');
+let Servo_msg = require('./Servo_msg.js');
 
 module.exports = {
-  Servo: Servo,
+  Servo_msg: Servo_msg,
 };

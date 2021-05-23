@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "/home/pi/abelhudo_ws/devel/include/abelhudo_pkg/Servo.h"
+  "/home/pi/abelhudo_ws/devel/include/abelhudo_pkg/Servo_msg.h"
   "CMakeFiles/abelhudo_pkg_generate_messages_cpp"
 )
 

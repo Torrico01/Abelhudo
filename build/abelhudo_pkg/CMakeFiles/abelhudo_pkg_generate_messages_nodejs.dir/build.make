@@ -53,16 +53,16 @@ CMAKE_BINARY_DIR = /home/pi/abelhudo_ws/build
 # Include the progress variables for this target.
 include abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_nodejs.dir/progress.make
 
-abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_nodejs: /home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo.js
+abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_nodejs: /home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo_msg.js
 
 
-/home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo.js: /opt/ros/melodic/lib/gennodejs/gen_nodejs.py
-/home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo.js: /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo.msg
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Javascript code from abelhudo_pkg/Servo.msg"
-	cd /home/pi/abelhudo_ws/build/abelhudo_pkg && ../catkin_generated/env_cached.sh /usr/bin/python2 /opt/ros/melodic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo.msg -Iabelhudo_pkg:/home/pi/abelhudo_ws/src/abelhudo_pkg/msg -Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg -p abelhudo_pkg -o /home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg
+/home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo_msg.js: /opt/ros/melodic/lib/gennodejs/gen_nodejs.py
+/home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo_msg.js: /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo_msg.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Javascript code from abelhudo_pkg/Servo_msg.msg"
+	cd /home/pi/abelhudo_ws/build/abelhudo_pkg && ../catkin_generated/env_cached.sh /usr/bin/python2 /opt/ros/melodic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo_msg.msg -Iabelhudo_pkg:/home/pi/abelhudo_ws/src/abelhudo_pkg/msg -Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg -p abelhudo_pkg -o /home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg
 
 abelhudo_pkg_generate_messages_nodejs: abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_nodejs
-abelhudo_pkg_generate_messages_nodejs: /home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo.js
+abelhudo_pkg_generate_messages_nodejs: /home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo_msg.js
 abelhudo_pkg_generate_messages_nodejs: abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_nodejs.dir/build.make
 
 .PHONY : abelhudo_pkg_generate_messages_nodejs

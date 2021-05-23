@@ -38,7 +38,7 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/abelhudo_pkg/msg" TYPE FILE FILES "/home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo.msg")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/abelhudo_pkg/msg" TYPE FILE FILES "/home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo_msg.msg")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)

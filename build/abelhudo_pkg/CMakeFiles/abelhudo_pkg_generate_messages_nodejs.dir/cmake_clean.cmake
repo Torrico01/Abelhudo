@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "/home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo.js"
+  "/home/pi/abelhudo_ws/devel/share/gennodejs/ros/abelhudo_pkg/msg/Servo_msg.js"
   "CMakeFiles/abelhudo_pkg_generate_messages_nodejs"
 )
 
