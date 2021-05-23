@@ -6,19 +6,19 @@
 
 """ Codigo teorico independente da GPIO do Raspberry, apenas trabalhando com ROS"""
 
+# Importando Bibliotecas
 import sys
 import math
 import rospy
 import time as delay
 import RPi.GPIO as GPIO
-GPIO.setwarnings(False)
-
-from sonar import Sonar
+# Importando Mensagens ROS
 from sensor_msgs.msg import Range
+# Importando GPIO Local
+from sonar import Sonar
 
-# Pinos
-triggerPIN = 7
-echoPIN    = 11
+# Desabilita Avisos da GPIO
+GPIO.setwarnings(False)
 
 class SonarProp():
     def __init__(self,
@@ -37,10 +37,10 @@ class SonarProp():
         rospy.loginfo("Sonar configurado!")
 
         # Publishers
-        topic_name = "/ModCar/sonar"
+        topic_name = "/Abelhudo/Sonar"
         pub = rospy.Publisher(topic_name, Range, queue_size=5)
         self.pub_array.append(pub)
-        rospy.loginfo("Publicando recepcao do sonar em /ModCar/sonar")
+        rospy.loginfo("Publicando recepcao do sonar em /Abelhudo/Sonar")
 
         message = Range()
         message.radiation_type  = 0
@@ -70,7 +70,7 @@ class SonarProp():
         rospy.loginfo("Interrompido.")
 
 
-
+'''
 if __name__ == '__main__':
     rospy.loginfo("Iniciando node do sonar...")
     rospy.init_node("node_test")
@@ -79,9 +79,4 @@ if __name__ == '__main__':
                             range_min    = 0.05,
                             range_max    = 3.5)
     sonar_array.run()
-    '''
-    try:
-        main()
-    except rospy.ROSInterruptException:
-        GPIO.cleanup()
-    '''
+'''

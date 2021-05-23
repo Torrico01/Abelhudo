@@ -6,6 +6,7 @@
 
 """ Codigo teorico independente da GPIO do Raspberry, apenas trabalhando com ROS """
 
+# Importando Bibliotecas
 import sys
 import math
 import rospy
@@ -13,15 +14,19 @@ import numpy as np
 import time as delay
 import RPi.GPIO as GPIO
 import matplotlib.pyplot as plt
+# Importando Mensagens ROS
 from sensor_msgs.msg import Range
-from random import randint
-from random import seed
-seed(2)
-
+from abelhudo_pkg.msg import Servo_msg
+# Importando Nodes Locais
 from sonar_node import SonarProp
 from motor_node import MotorProp
 from servo_node import ServoProp
+# Importando Gerador de Numeros Aleatorios
+from random import randint
+from random import seed
+seed(3)
 
+# Desabilita Avisos da GPIO
 GPIO.setwarnings(False)
 
 
@@ -35,7 +40,7 @@ echoPIN    = 11
 encoderPIN = 13
 
 ''' INICIANDO NODES '''
-rospy.init_node("node_test")
+rospy.init_node("abelhudo")
 
 sonar_array = SonarProp(gpio_trigger = triggerPIN,
                         gpio_echo    = echoPIN,
@@ -58,6 +63,16 @@ servo_array = ServoProp(gpio_signal = servoPIN)
 def callback_sonar(data):
     global dist
     dist = round(data.range,2)
+
+''' PUBLISHERS '''
+def servo_angle(angle):
+    global pub_servo
+    global message_servo
+    global servo_array
+    message_servo.angle = angle
+    pub_servo.publish(message_servo)
+    servo_array.subscriber()
+
 
 
 ''' VARIAVEIS GERAIS '''
@@ -103,7 +118,7 @@ def plot(theta, r):
     plt.savefig('/home/pi/teste_ws/src/package_test/scripts/foo.png')
     plt.close()
 
-
+'''
 # --- CODIGO SONAR - SEGUIDOR ---
 def seguidor():
     global flag_once_sonar
@@ -245,16 +260,23 @@ def encoder():
     estado_anterior = estado_atual
 
     return
-
+'''
 if __name__ == '__main__':
-    rospy.Subscriber("/ModCar/sonar", Range, callback_sonar)
+    ''' Subscribers '''
+    rospy.Subscriber("/Abelhudo/Sonar", Range, callback_sonar)
+    ''' Publishers '''
+    pub_servo = rospy.Publisher("/Abelhudo/Servo", Servo_msg, queue_size=3) # Queue size: tamanho do armazenamento do sinal enviado ate que o subscriber consiga ler (1 eh bom para sensores instantaneos)
+    rospy.loginfo("Publicando angulo do servo em /Abelhudo/Servo")
+    message_servo = Servo_msg()
+
+    ''' Inicializacao '''
     rospy.loginfo("Carro iniciado.")
     rate = rospy.Rate(150) # ---------------- RATE ----------------
-
     # Configuracoes iniciais
     GPIO.setup(encoderPIN, GPIO.IN)
     motor_array.direcao(horario, motor2)
-    servo_array.angulo(45)
+    servo_angle(45)
+    #servo_array.angulo(45)
 
     # Variaveis Encoder
     count = 0              # Contagem do numero de transicoes do infravermelho do encoder
@@ -274,7 +296,9 @@ if __name__ == '__main__':
     check = 0              # Variavel para checar quatro vezes antes de sair do estado locked
 
     while not rospy.is_shutdown():
-        seguidor()
+        #seguidor()
+        servo_angle(50)
+        servo_angle(40)
         rate.sleep()
 
 
