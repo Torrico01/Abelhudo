@@ -1,0 +1,10 @@
+<launch>
+
+    <node pkg="abelhudo_pkg"
+          name="abelhudo_launch"
+          type="car_node.py"
+          output="screen"
+          />
+
+</launch>
+
