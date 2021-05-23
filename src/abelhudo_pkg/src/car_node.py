@@ -14,10 +14,9 @@ import time as delay
 import RPi.GPIO as GPIO
 import matplotlib.pyplot as plt
 from sensor_msgs.msg import Range
-from package_test.msg import Servo
 from random import randint
 from random import seed
-seed(2) # teste 2
+seed(2)
 
 from sonar_node import SonarProp
 from motor_node import MotorProp
@@ -61,7 +60,7 @@ def callback_sonar(data):
     dist = round(data.range,2)
 
 
-''' VARIAVEIS GLOBAIS '''
+''' VARIAVEIS GERAIS '''
 motor1      =  1
 motor2      =  2
 antihorario = -1
@@ -107,10 +106,10 @@ def plot(theta, r):
 
 # --- CODIGO SONAR - SEGUIDOR ---
 def seguidor():
-    global state
-    global dist_anterior
     global flag_once_sonar
+    global dist_anterior
     global dir_sonar
+    global state
     global angle
     global check
 
@@ -128,7 +127,7 @@ def seguidor():
     # Estado de objeto detectado, esperando a distancia detectada ser maior que MIN_DIST
     elif (state == "locked"):
         if (dist > MIN_DIST and dist_anterior > MIN_DIST):
-            if check == 0: # Variavel para checar quatro vezes antes de sair do estado "locked"
+            if check == 0:
                 if (dir_sonar == horario):
                     angle += 20
                     # Se o angulo estiver muito na borda, muda a direcao de giro do Servo
@@ -188,7 +187,64 @@ def seguidor():
 
     return
 
+# --- CODIGO ENCODER ---
+def encoder():
+    global dir
+    global count
+    global flag_0
+    global flag_1
+    global flag_once_motor
+    global estado_anterior
 
+    # Frente
+    if dir == horario:
+        if count < 18: # count Frente x 0.9 = count Re ... Uma volta da roda = 18 count Frente/ 20 count Re (Aprox. 25cm)
+            if flag_once_motor == True:
+                motor_array.direcao(horario, motor2)
+                motor_array.potencia(50, motor2)
+                flag_once_motor = False
+        else:
+            motor_array.potencia(0, motor2)
+            flag_once_motor = True
+            count = 0
+            if (dir == horario):
+                dir = antihorario
+            else:
+                dir = horario
+            delay.sleep(2)
+
+    # Re
+    elif dir == antihorario:
+        if count < 20:
+            if flag_once_motor == True:
+                motor_array.direcao(antihorario, motor2)
+                motor_array.potencia(50, motor2)
+                flag_once_motor = False
+        else:
+            motor_array.potencia(0, motor2)
+            flag_once_motor = True
+            count = 0
+            if (dir == horario):
+                dir = antihorario
+            else:
+                dir = horario
+            delay.sleep(2)
+
+    # Checagem dupla do encoder
+    estado_atual = GPIO.input(encoderPIN)
+    if (estado_atual == 0 and estado_anterior == 0):
+        if flag_0 == True:
+            count += 1
+        flag_0 = False
+        flag_1 = True
+    elif (estado_atual == 1 and estado_anterior == 1):
+        if flag_1 == True:
+            count += 1
+        flag_1 = False
+        flag_0 = True
+    estado_anterior = estado_atual
+
+    return
 
 if __name__ == '__main__':
     rospy.Subscriber("/ModCar/sonar", Range, callback_sonar)
@@ -201,79 +257,25 @@ if __name__ == '__main__':
     servo_array.angulo(45)
 
     # Variaveis Encoder
-    count = 0
-    dir = horario
-    flag_0 = False
-    flag_1 = False
-    flag_once = True
-    estado_anterior = 0
+    count = 0              # Contagem do numero de transicoes do infravermelho do encoder
+    dir = horario          # Direcao do motor
+    flag_0 = True          # Flag para contar apenas uma vez a transicao para 0
+    flag_1 = True          # Flag para contar apenas uma vez a transicao para 1
+    estado_anterior = 0    # Variavel para fazer verificacao dupla do encoder
+    flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
 
     # Variaveis Sonar
-    state = "searching"
-    dist_anterior = 0
-    flag_once_sonar = True
-    dir_sonar = horario
-    MIN_DIST = 0.2
-    angle = 45
-    check = 0
+    flag_once_sonar = True # Variavel para setar o angulo do servo apenas uma vez
+    dir_sonar = horario    # Direcao de giro do servo
+    state = "searching"    # Estado do sonar
+    dist_anterior = 0      # Variavel para fazer verificacao dupla do sonar
+    MIN_DIST = 0.2         # Constante da distancia minima do estado locked (20 cm)
+    angle = 45             # Angulo do servo
+    check = 0              # Variavel para checar quatro vezes antes de sair do estado locked
 
     while not rospy.is_shutdown():
-        #state, dist_anterior, flag_once_sonar,  dir_sonar, angle, check = seguidor(state, dist_anterior, flag_once_sonar,  dir_sonar, angle, check)
-        #seguidor()
+        seguidor()
         rate.sleep()
-
-        '''
-        # --- CODIGO ENCODER ---
-               # Frente
-        if dir == horario:
-            if count < 18: # count Frente x 0.9 = count Re ... Uma volta da roda = 18 count Frente/ 20 count Re
-                if flag_once == True:
-                    motor_array.direcao(horario, motor2)
-                    motor_array.potencia(50, motor2)
-                    flag_once = False
-            else:
-                motor_array.potencia(0, motor2)
-                flag_once = True
-                count = 0
-                if (dir == horario):
-                    dir = antihorario
-                else:
-                    dir = horario
-                delay.sleep(2)
-
-               # Re
-        elif dir == antihorario:
-            if count < 20:
-                if flag_once == True:
-                    motor_array.direcao(antihorario, motor2)
-                    motor_array.potencia(50, motor2)
-                    flag_once = False
-            else:
-                motor_array.potencia(0, motor2)
-                flag_once = True
-                count = 0
-                if (dir == horario):
-                    dir = antihorario
-                else:
-                    dir = horario
-                delay.sleep(2)
-
-               # Checagem dupla do encoder
-        estado_atual = GPIO.input(encoderPIN)
-        if (estado_atual == 0 and estado_anterior == 0):
-            if flag_0 == False:
-                count += 1
-            flag_0 = True
-            flag_1 = False
-        elif (estado_atual == 1 and estado_anterior == 1):
-            if flag_1 == False:
-                count += 1
-            flag_1 = True
-            flag_0 = False
-        estado_anterior = estado_atual
-
-        rate.sleep()
-        '''
 
 
     ''' --- CODIGO SONAR EM COORD POLAR ---
