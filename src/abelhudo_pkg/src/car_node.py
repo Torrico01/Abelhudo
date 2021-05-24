@@ -65,7 +65,7 @@ def callback_sonar(data):
     dist = round(data.range,2)
 
 ''' PUBLISHERS '''
-def servo_angle(angle, pub_servo, message_servo):
+def servo_angle(angle):
     global pub_servo
     global message_servo
     message_servo.angle = angle
@@ -296,7 +296,11 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         #seguidor()
         servo_angle(50)
+        sonar_array.scan()
+        delay.sleep(1)
         servo_angle(40)
+        sonar_array.scan()
+        delay.sleep(1)
         rate.sleep()
 
 

@@ -70,6 +70,7 @@ if __name__ == '__main__':
     rospy.init_node("servo_node")
     servo_array = ServoProp(gpio_signal = servoPIN)
     rate = rospy.Rate(150)
+    servo_array.angulo(45)
     while not rospy.is_shutdown():
         if angle > 0:
             servo_array.angulo(angle)
