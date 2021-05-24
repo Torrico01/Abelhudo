@@ -17,6 +17,11 @@
           type="motor_node.py"
           output="screen"
           />
+    <node pkg="abelhudo_pkg"
+          name="sonar_node"
+          type="sonar_node.py"
+          output="screen"
+          />
 
 </launch>
 

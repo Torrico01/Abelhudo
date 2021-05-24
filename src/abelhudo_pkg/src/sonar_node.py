@@ -20,6 +20,10 @@ from sonar import Sonar
 # Desabilita Avisos da GPIO
 GPIO.setwarnings(False)
 
+# Variaveis Globais / Pinos
+triggerPIN = 7
+echoPIN    = 11
+
 class SonarProp():
     def __init__(self,
             gpio_trigger,
@@ -70,13 +74,18 @@ class SonarProp():
         rospy.loginfo("Interrompido.")
 
 
-'''
+
 if __name__ == '__main__':
+    # Inicializacao
     rospy.loginfo("Iniciando node do sonar...")
-    rospy.init_node("node_test")
+    rospy.init_node("sonar_node")
     sonar_array = SonarProp(gpio_trigger = triggerPIN,
                             gpio_echo    = echoPIN,
                             range_min    = 0.05,
                             range_max    = 3.5)
-    sonar_array.run()
-'''
+    rate = rospy.Rate(15) # --------------- RATE ---------------
+    # Loop
+    while not rospy.is_shutdown():
+        sonar_array.scan()
+    GPIO.cleanup()
+    rospy.loginfo("Interrompendo: sonar_node.")

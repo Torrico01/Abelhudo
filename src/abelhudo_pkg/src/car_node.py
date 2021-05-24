@@ -18,8 +18,9 @@ import matplotlib.pyplot as plt
 from sensor_msgs.msg import Range
 from abelhudo_pkg.msg import Servo_msg
 from abelhudo_pkg.msg import Motor_msg
+from abelhudo_pkg.msg import Encoder_msg
 # Importando Nodes Locais
-from sonar_node import SonarProp
+#from sonar_node import SonarProp
 #from motor_node import MotorProp
 #from servo_node import ServoProp
 # Importando Gerador de Numeros Aleatorios
@@ -43,10 +44,10 @@ encoderPIN = 13
 ''' INICIANDO NODES '''
 rospy.init_node("abelhudo_node")
 
-sonar_array = SonarProp(gpio_trigger = triggerPIN,
-                        gpio_echo    = echoPIN,
-                        range_min    = 0.05,
-                        range_max    = 3)
+#sonar_array = SonarProp(gpio_trigger = triggerPIN,
+#                        gpio_echo    = echoPIN,
+#                        range_min    = 0.05,
+#                        range_max    = 3)
 
 #motor_array = MotorProp(gpio_dir1 = 0,
 #                        gpio_dir2 = 0,
@@ -64,6 +65,10 @@ sonar_array = SonarProp(gpio_trigger = triggerPIN,
 def callback_sonar(data):
     global dist
     dist = round(data.range,2)
+
+def callback_encoder(data):
+    global estado_encoder
+    estado_encoder = data.estado_encoder
 
 ''' PUBLISHERS '''
 def servo_angle(angle):
@@ -94,10 +99,8 @@ good_dist   =  False
 
 
 ''' FUNCOES '''
-#motor_array.direcao(horario, motor2)
-#motor_array.potencia(pwm, motor2)
-#servo_array.angulo(0-90)
-#sonar_array.scan()
+"servo_angle(angle)"
+"motor_prop(pwm, dir, motor)"
 
 def pol2cart(theta, r):
     x = r * np.cos(theta)
@@ -271,6 +274,7 @@ def encoder():
 if __name__ == '__main__':
     ''' Subscribers '''
     rospy.Subscriber("/Abelhudo/Sonar", Range, callback_sonar)
+    rospy.Subscriber("/Abelhudo/Encoder", Encoder_msg, callback_encoder)
     ''' Publishers '''
     pub_servo = rospy.Publisher("/Abelhudo/Servo", Servo_msg, queue_size=1) # Queue size: tamanho do armazenamento do sinal enviado ate que o subscriber consiga ler (1 eh bom para sensores instantaneos)
     rospy.loginfo("Publicando angulo do servo em /Abelhudo/Servo")
@@ -289,9 +293,6 @@ if __name__ == '__main__':
     # Variaveis Encoder
     count = 0              # Contagem do numero de transicoes do infravermelho do encoder
     dir = horario          # Direcao do motor
-    flag_0 = True          # Flag para contar apenas uma vez a transicao para 0
-    flag_1 = True          # Flag para contar apenas uma vez a transicao para 1
-    estado_anterior = 0    # Variavel para fazer verificacao dupla do encoder
     flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
 
     # Variaveis Sonar
@@ -305,14 +306,18 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
         #seguidor()
-        servo_angle(50)
-        sonar_array.scan()
-        motor_prop(30, horario, motor2)
+        servo_angle(55)
+        motor_prop(50, horario, motor2)
         delay.sleep(0.7)
 
-        servo_angle(40)
-        sonar_array.scan()
-        motor_prop(60, antihorario, motor2)
+        motor_prop(0, parar, motor2)
+        delay.sleep(0.7)
+
+        servo_angle(35)
+        motor_prop(50, antihorario, motor2)
+        delay.sleep(0.7)
+
+        motor_prop(0, parar, motor2)
         delay.sleep(0.7)
 
         rate.sleep()
