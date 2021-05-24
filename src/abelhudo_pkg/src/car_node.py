@@ -20,7 +20,7 @@ from abelhudo_pkg.msg import Servo_msg
 # Importando Nodes Locais
 from sonar_node import SonarProp
 from motor_node import MotorProp
-from servo_node import ServoProp
+#from servo_node import ServoProp
 # Importando Gerador de Numeros Aleatorios
 from random import randint
 from random import seed
@@ -40,7 +40,7 @@ echoPIN    = 11
 encoderPIN = 13
 
 ''' INICIANDO NODES '''
-rospy.init_node("abelhudo")
+rospy.init_node("abelhudo_node")
 
 sonar_array = SonarProp(gpio_trigger = triggerPIN,
                         gpio_echo    = echoPIN,
@@ -56,7 +56,7 @@ motor_array = MotorProp(gpio_dir1 = 0,
                         use_m1 = False,
                         use_m2 = True)
 
-servo_array = ServoProp(gpio_signal = servoPIN)
+#servo_array = ServoProp(gpio_signal = servoPIN)
 
 
 ''' CALLBACKS '''
@@ -65,13 +65,11 @@ def callback_sonar(data):
     dist = round(data.range,2)
 
 ''' PUBLISHERS '''
-def servo_angle(angle):
+def servo_angle(angle, pub_servo, message_servo):
     global pub_servo
     global message_servo
-    global servo_array
     message_servo.angle = angle
     pub_servo.publish(message_servo)
-    servo_array.subscriber()
 
 
 
@@ -325,5 +323,5 @@ if __name__ == '__main__':
     '''
 
     GPIO.cleanup()
-    rospy.loginfo("Interrompido.")
+    rospy.loginfo("Interrompendo: servo_node.")
 

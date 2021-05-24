@@ -21,6 +21,7 @@ from servo import Servo
 GPIO.setwarnings(False)
 
 # Variaveis Globais
+servoPIN   = 3
 angle = -1
 
 ''' CALLBACKS '''
@@ -49,13 +50,6 @@ class ServoProp():
         self.servo_array[0].set_angle(angle)
         rospy.loginfo("Servo setado com %s graus" % angle)
 
-    def subscriber(self):
-        global angle
-        while angle < 0:
-            pass
-        self.servo_array[0].set_angle(angle)
-        rospy.loginfo("Servo setado com %s graus" % angle)
-        angle = -1
 
     def run(self):
         #--- Set the control rate
@@ -70,10 +64,15 @@ class ServoProp():
         GPIO.cleanup()
         rospy.loginfo("Interrompido.")
 
-'''
+
 if __name__ == '__main__':
     rospy.loginfo("Iniciando node do servo...")
-    rospy.init_node("node_test")
+    rospy.init_node("servo_node")
     servo_array = ServoProp(gpio_signal = servoPIN)
-    servo_array.run()
-'''
+    rate = rospy.Rate(150)
+    while not rospy.is_shutdown():
+        if angle > 0:
+            servo_array.angulo(angle)
+            angle = -1
+    GPIO.cleanup()
+    rospy.loginfo("Interrompendo: servo_node.")

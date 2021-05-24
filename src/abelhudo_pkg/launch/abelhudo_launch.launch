@@ -6,5 +6,11 @@
           output="screen"
           />
 
+    <node pkg="abelhudo_pkg"
+          name="abelhudo_launch"
+          type="servo_node.py"
+          output="screen"
+          />
+
 </launch>
 
