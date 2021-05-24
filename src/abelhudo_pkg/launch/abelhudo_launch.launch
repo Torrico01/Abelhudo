@@ -1,14 +1,20 @@
 <launch>
 
     <node pkg="abelhudo_pkg"
-          name="abelhudo_launch"
+          name="abelhudo_node"
           type="car_node.py"
           output="screen"
           />
 
     <node pkg="abelhudo_pkg"
-          name="abelhudo_launch"
+          name="servo_node"
           type="servo_node.py"
+          output="screen"
+          />
+
+    <node pkg="abelhudo_pkg"
+          name="motor_node"
+          type="motor_node.py"
           output="screen"
           />
 

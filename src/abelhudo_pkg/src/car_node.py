@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 # Importando Mensagens ROS
 from sensor_msgs.msg import Range
 from abelhudo_pkg.msg import Servo_msg
+from abelhudo_pkg.msg import Motor_msg
 # Importando Nodes Locais
 from sonar_node import SonarProp
 from motor_node import MotorProp
@@ -70,6 +71,14 @@ def servo_angle(angle):
     global message_servo
     message_servo.angle = angle
     pub_servo.publish(message_servo)
+
+def motor_prop(pwm, dir, motor):
+    global pub_motor
+    global message_motor
+    message_motor.pwm = pwm
+    message_motor.dir = dir
+    message_motor.motor = motor
+    pub_motor.publish(message_motor)
 
 
 
@@ -266,6 +275,9 @@ if __name__ == '__main__':
     pub_servo = rospy.Publisher("/Abelhudo/Servo", Servo_msg, queue_size=3) # Queue size: tamanho do armazenamento do sinal enviado ate que o subscriber consiga ler (1 eh bom para sensores instantaneos)
     rospy.loginfo("Publicando angulo do servo em /Abelhudo/Servo")
     message_servo = Servo_msg()
+    pub_motor = rospy.Publisher("/Abelhudo/Motor", Motor_msg, queue_size=3) # Queue size: tamanho do armazenamento do sinal enviado ate que o subscriber consiga ler (1 eh bom para sensores instantaneos)
+    rospy.loginfo("Publicando angulo do servo em /Abelhudo/Motor")
+    message_motor = Motor_msg()
 
     ''' Inicializacao '''
     rospy.loginfo("Carro iniciado.")
@@ -273,8 +285,6 @@ if __name__ == '__main__':
     # Configuracoes iniciais
     GPIO.setup(encoderPIN, GPIO.IN)
     motor_array.direcao(horario, motor2)
-    servo_angle(45)
-    #servo_array.angulo(45)
 
     # Variaveis Encoder
     count = 0              # Contagem do numero de transicoes do infravermelho do encoder
@@ -297,10 +307,14 @@ if __name__ == '__main__':
         #seguidor()
         servo_angle(50)
         sonar_array.scan()
-        delay.sleep(1)
+        motor_prop(30, horario, motor2)
+        delay.sleep(0.5)
+
         servo_angle(40)
         sonar_array.scan()
-        delay.sleep(1)
+        motor_prop(60, antihorario, motor2)
+        delay.sleep(0.5)
+
         rate.sleep()
 
 

@@ -6,19 +6,38 @@
 
 """ Codigo teorico independente do GPIO do Raspberry, apenas trabalhando com ROS"""
 
+# Importando Bibliotecas
 import sys
 import math
 import rospy
 import time as delay
 import RPi.GPIO as GPIO
-GPIO.setwarnings(False)
-
+# Importando Mensagens ROS
+from abelhudo_pkg.msg import Motor_msg
+# Importando GPIO Local
 from motor import Motor
 
-# Pinos
-#motorDIR1  = 40
-#motorDIR2  = 38
-#motorPWM   = 36
+# Desabilita Avisos da GPIO
+GPIO.setwarnings(False)
+
+# Variaveis Globais / Pinos
+motorDIR1  = 40
+motorDIR2  = 38
+motorPWM   = 36
+pwm   = 0  # 0 - 100
+dir   = 0  # 1 ou -1
+motor = 0  # 1 ou 2
+
+
+''' CALLBACKS '''
+def callback_motor(data):
+    global pwm
+    global dir
+    global motor
+    pwm = data.pwm
+    pwm = data.dir
+    pwm = data.motor
+
 
 class MotorProp():
     def __init__(self,
@@ -34,10 +53,13 @@ class MotorProp():
 
         self.motor_array = []
 
-        rospy.loginfo("Iniciando motor...")
+        #rospy.loginfo("Iniciando motor...")
         motor = Motor(gpio_dir1, gpio_dir2, gpio_dir3, gpio_dir4, gpio_pwm1, gpio_pwm2, use_m1, use_m2)
         self.motor_array.append(motor)
         rospy.loginfo("Motor configurado!")
+
+        # Subscribers
+        rospy.Subscriber("/Abelhudo/Motor", Motor_msg, callback_motor)
 
     def direcao(self, dir, motor):
         # dir = -1: counterclockwise; dir = 0: brake, dir = 1: clockwise
@@ -67,8 +89,9 @@ class MotorProp():
         rospy.loginfo("Interrompido.")
 
 if __name__ == '__main__':
+    # Inicializacao
     rospy.loginfo("Iniciando node do motor...")
-    rospy.init_node("node_test")
+    rospy.init_node("motor_node")
     motor_array = MotorProp(gpio_dir1 = 0,
                             gpio_dir2 = 0,
                             gpio_dir3 = motorDIR1,
@@ -77,5 +100,12 @@ if __name__ == '__main__':
                             gpio_pwm2 = motorPWM,
                             use_m1 = False,
                             use_m2 = True)
-    motor_array.run()
-
+    rate = rospy.Rate(150) # --------------- RATE ---------------
+    # Loop
+    while not rospy.is_shutdown():
+        if motor > 0:
+            motor_array.direcao(dir, motor)
+            motor_array.potencia(pwm, motor)
+        motor = 0
+    GPIO.cleanup()
+    rospy.loginfo("Interrompendo: servo_node.")

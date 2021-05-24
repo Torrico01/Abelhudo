@@ -31,7 +31,7 @@ class SonarProp():
         self.sonar_array = []
         self.pub_array   = []
 
-        rospy.loginfo("Iniciando sonar...")
+        #rospy.loginfo("Iniciando sonar...")
         sonar = Sonar(gpio_trigger, gpio_echo, range_min=range_min*100, range_max=range_max*100)
         self.sonar_array.append(sonar)
         rospy.loginfo("Sonar configurado!")

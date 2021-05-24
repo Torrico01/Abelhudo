@@ -20,9 +20,10 @@ from servo import Servo
 # Desabilita Avisos da GPIO
 GPIO.setwarnings(False)
 
-# Variaveis Globais
+# Variaveis Globais / Pinos
 servoPIN   = 3
-angle = -1
+angle = -1 # 0 - 90
+
 
 ''' CALLBACKS '''
 def callback_servo(data):
@@ -37,7 +38,7 @@ class ServoProp():
 
         self.servo_array = []
 
-        rospy.loginfo("Iniciando servo...")
+        #rospy.loginfo("Iniciando servo...")
         servo = Servo(gpio_signal)
         self.servo_array.append(servo)
         rospy.loginfo("Servo configurado!")
@@ -66,11 +67,13 @@ class ServoProp():
 
 
 if __name__ == '__main__':
+    # Inicializacao
     rospy.loginfo("Iniciando node do servo...")
     rospy.init_node("servo_node")
     servo_array = ServoProp(gpio_signal = servoPIN)
-    rate = rospy.Rate(150)
     servo_array.angulo(45)
+    rate = rospy.Rate(150) # --------------- RATE ---------------
+    # Loop
     while not rospy.is_shutdown():
         if angle > 0:
             servo_array.angulo(angle)
