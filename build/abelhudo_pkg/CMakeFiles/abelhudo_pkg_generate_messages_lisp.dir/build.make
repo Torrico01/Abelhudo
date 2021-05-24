@@ -54,6 +54,7 @@ CMAKE_BINARY_DIR = /home/pi/abelhudo_ws/build
 include abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_lisp.dir/progress.make
 
 abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_lisp: /home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Servo_msg.lisp
+abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_lisp: /home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Motor_msg.lisp
 
 
 /home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Servo_msg.lisp: /opt/ros/melodic/lib/genlisp/gen_lisp.py
@@ -61,8 +62,14 @@ abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_lisp: /home/pi/abelhudo_w
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Lisp code from abelhudo_pkg/Servo_msg.msg"
 	cd /home/pi/abelhudo_ws/build/abelhudo_pkg && ../catkin_generated/env_cached.sh /usr/bin/python2 /opt/ros/melodic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo_msg.msg -Iabelhudo_pkg:/home/pi/abelhudo_ws/src/abelhudo_pkg/msg -Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg -p abelhudo_pkg -o /home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg
 
+/home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Motor_msg.lisp: /opt/ros/melodic/lib/genlisp/gen_lisp.py
+/home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Motor_msg.lisp: /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Motor_msg.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Lisp code from abelhudo_pkg/Motor_msg.msg"
+	cd /home/pi/abelhudo_ws/build/abelhudo_pkg && ../catkin_generated/env_cached.sh /usr/bin/python2 /opt/ros/melodic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Motor_msg.msg -Iabelhudo_pkg:/home/pi/abelhudo_ws/src/abelhudo_pkg/msg -Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg -p abelhudo_pkg -o /home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg
+
 abelhudo_pkg_generate_messages_lisp: abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_lisp
 abelhudo_pkg_generate_messages_lisp: /home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Servo_msg.lisp
+abelhudo_pkg_generate_messages_lisp: /home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Motor_msg.lisp
 abelhudo_pkg_generate_messages_lisp: abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_lisp.dir/build.make
 
 .PHONY : abelhudo_pkg_generate_messages_lisp

@@ -35,8 +35,8 @@ def callback_motor(data):
     global dir
     global motor
     pwm = data.pwm
-    pwm = data.dir
-    pwm = data.motor
+    dir = data.dir
+    motor = data.motor
 
 
 class MotorProp():
@@ -106,6 +106,6 @@ if __name__ == '__main__':
         if motor > 0:
             motor_array.direcao(dir, motor)
             motor_array.potencia(pwm, motor)
-        motor = 0
+            motor = 0
     GPIO.cleanup()
-    rospy.loginfo("Interrompendo: servo_node.")
+    rospy.loginfo("Interrompendo: motor_node.")

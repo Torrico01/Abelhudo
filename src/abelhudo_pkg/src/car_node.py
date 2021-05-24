@@ -20,7 +20,7 @@ from abelhudo_pkg.msg import Servo_msg
 from abelhudo_pkg.msg import Motor_msg
 # Importando Nodes Locais
 from sonar_node import SonarProp
-from motor_node import MotorProp
+#from motor_node import MotorProp
 #from servo_node import ServoProp
 # Importando Gerador de Numeros Aleatorios
 from random import randint
@@ -48,14 +48,14 @@ sonar_array = SonarProp(gpio_trigger = triggerPIN,
                         range_min    = 0.05,
                         range_max    = 3)
 
-motor_array = MotorProp(gpio_dir1 = 0,
-                        gpio_dir2 = 0,
-                        gpio_dir3 = motorDIR1,
-                        gpio_dir4 = motorDIR2,
-                        gpio_pwm1 = 0,
-                        gpio_pwm2 = motorPWM,
-                        use_m1 = False,
-                        use_m2 = True)
+#motor_array = MotorProp(gpio_dir1 = 0,
+#                        gpio_dir2 = 0,
+#                        gpio_dir3 = motorDIR1,
+#                        gpio_dir4 = motorDIR2,
+#                        gpio_pwm1 = 0,
+#                        gpio_pwm2 = motorPWM,
+#                        use_m1 = False,
+#                        use_m2 = True)
 
 #servo_array = ServoProp(gpio_signal = servoPIN)
 
@@ -272,11 +272,11 @@ if __name__ == '__main__':
     ''' Subscribers '''
     rospy.Subscriber("/Abelhudo/Sonar", Range, callback_sonar)
     ''' Publishers '''
-    pub_servo = rospy.Publisher("/Abelhudo/Servo", Servo_msg, queue_size=3) # Queue size: tamanho do armazenamento do sinal enviado ate que o subscriber consiga ler (1 eh bom para sensores instantaneos)
+    pub_servo = rospy.Publisher("/Abelhudo/Servo", Servo_msg, queue_size=1) # Queue size: tamanho do armazenamento do sinal enviado ate que o subscriber consiga ler (1 eh bom para sensores instantaneos)
     rospy.loginfo("Publicando angulo do servo em /Abelhudo/Servo")
     message_servo = Servo_msg()
     pub_motor = rospy.Publisher("/Abelhudo/Motor", Motor_msg, queue_size=3) # Queue size: tamanho do armazenamento do sinal enviado ate que o subscriber consiga ler (1 eh bom para sensores instantaneos)
-    rospy.loginfo("Publicando angulo do servo em /Abelhudo/Motor")
+    rospy.loginfo("Publicando propriedades do motor em /Abelhudo/Motor")
     message_motor = Motor_msg()
 
     ''' Inicializacao '''
@@ -284,7 +284,7 @@ if __name__ == '__main__':
     rate = rospy.Rate(150) # ---------------- RATE ----------------
     # Configuracoes iniciais
     GPIO.setup(encoderPIN, GPIO.IN)
-    motor_array.direcao(horario, motor2)
+    #motor_array.direcao(horario, motor2)
 
     # Variaveis Encoder
     count = 0              # Contagem do numero de transicoes do infravermelho do encoder
@@ -308,12 +308,12 @@ if __name__ == '__main__':
         servo_angle(50)
         sonar_array.scan()
         motor_prop(30, horario, motor2)
-        delay.sleep(0.5)
+        delay.sleep(0.7)
 
         servo_angle(40)
         sonar_array.scan()
         motor_prop(60, antihorario, motor2)
-        delay.sleep(0.5)
+        delay.sleep(0.7)
 
         rate.sleep()
 

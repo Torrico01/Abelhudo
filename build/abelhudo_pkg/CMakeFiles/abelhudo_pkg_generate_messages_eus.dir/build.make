@@ -54,6 +54,7 @@ CMAKE_BINARY_DIR = /home/pi/abelhudo_ws/build
 include abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_eus.dir/progress.make
 
 abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_eus: /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg/Servo_msg.l
+abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_eus: /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg/Motor_msg.l
 abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_eus: /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/manifest.l
 
 
@@ -62,12 +63,18 @@ abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_eus: /home/pi/abelhudo_ws
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating EusLisp code from abelhudo_pkg/Servo_msg.msg"
 	cd /home/pi/abelhudo_ws/build/abelhudo_pkg && ../catkin_generated/env_cached.sh /usr/bin/python2 /opt/ros/melodic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo_msg.msg -Iabelhudo_pkg:/home/pi/abelhudo_ws/src/abelhudo_pkg/msg -Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg -p abelhudo_pkg -o /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg
 
+/home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg/Motor_msg.l: /opt/ros/melodic/lib/geneus/gen_eus.py
+/home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg/Motor_msg.l: /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Motor_msg.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating EusLisp code from abelhudo_pkg/Motor_msg.msg"
+	cd /home/pi/abelhudo_ws/build/abelhudo_pkg && ../catkin_generated/env_cached.sh /usr/bin/python2 /opt/ros/melodic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Motor_msg.msg -Iabelhudo_pkg:/home/pi/abelhudo_ws/src/abelhudo_pkg/msg -Istd_msgs:/opt/ros/melodic/share/std_msgs/cmake/../msg -p abelhudo_pkg -o /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg
+
 /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/manifest.l: /opt/ros/melodic/lib/geneus/gen_eus.py
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating EusLisp manifest code for abelhudo_pkg"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/pi/abelhudo_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating EusLisp manifest code for abelhudo_pkg"
 	cd /home/pi/abelhudo_ws/build/abelhudo_pkg && ../catkin_generated/env_cached.sh /usr/bin/python2 /opt/ros/melodic/share/geneus/cmake/../../../lib/geneus/gen_eus.py -m -o /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg abelhudo_pkg std_msgs
 
 abelhudo_pkg_generate_messages_eus: abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_eus
 abelhudo_pkg_generate_messages_eus: /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg/Servo_msg.l
+abelhudo_pkg_generate_messages_eus: /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/msg/Motor_msg.l
 abelhudo_pkg_generate_messages_eus: /home/pi/abelhudo_ws/devel/share/roseus/ros/abelhudo_pkg/manifest.l
 abelhudo_pkg_generate_messages_eus: abelhudo_pkg/CMakeFiles/abelhudo_pkg_generate_messages_eus.dir/build.make
 
