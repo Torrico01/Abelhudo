@@ -347,5 +347,5 @@ if __name__ == '__main__':
     '''
 
     GPIO.cleanup()
-    rospy.loginfo("Interrompendo: servo_node.")
+    rospy.loginfo("Interrompendo: car_node.")
 
