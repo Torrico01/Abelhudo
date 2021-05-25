@@ -25,7 +25,7 @@ estado_anterior = 0 # 0 ou 1
 flag_0 = True       # Flag para contar apenas uma vez a transicao para 0
 flag_1 = True       # Flag para contar apenas uma vez a transicao para 1
 
-class SonarProp():
+class EncoderProp():
     def __init__(self,
             gpio_encoder
             ):
@@ -34,8 +34,8 @@ class SonarProp():
         self.pub_array   = []
 
         #rospy.loginfo("Iniciando encoder...")
-        encoder = Encoder(gpio_encoder)
-        self.encoder_array.append(encoder)
+        #encoder = Encoder(gpio_encoder)
+        #self.encoder_array.append(encoder)
         rospy.loginfo("Encoder configurado!")
 
         # Publishers
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # Inicializacao
     rospy.loginfo("Iniciando node do encoder...")
     rospy.init_node("encoder_node")
-    encoder_array = SonarProp(gpio_encoder = encoderPIN)
+    encoder_array = EncoderProp(gpio_encoder = encoderPIN)
     rate = rospy.Rate(150) # --------------- RATE ---------------
     # Loop
     while not rospy.is_shutdown():

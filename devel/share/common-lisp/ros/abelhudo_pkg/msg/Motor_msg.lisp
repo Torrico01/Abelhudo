@@ -83,10 +83,10 @@
   "e2b198c4bf4a0862124ad2db607e83d5")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<Motor_msg>)))
   "Returns full string definition for message of type '<Motor_msg>"
-  (cl:format cl:nil "uint16 pwm~%int16 dir~%uint16 motor~%~%~%"))
+  (cl:format cl:nil "uint16 pwm~%int16 dir~%uint16 motor~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'Motor_msg)))
   "Returns full string definition for message of type 'Motor_msg"
-  (cl:format cl:nil "uint16 pwm~%int16 dir~%uint16 motor~%~%~%"))
+  (cl:format cl:nil "uint16 pwm~%int16 dir~%uint16 motor~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <Motor_msg>))
   (cl:+ 0
      2

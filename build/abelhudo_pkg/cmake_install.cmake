@@ -41,6 +41,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/abelhudo_pkg/msg" TYPE FILE FILES
     "/home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Servo_msg.msg"
     "/home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Motor_msg.msg"
+    "/home/pi/abelhudo_ws/src/abelhudo_pkg/msg/Encoder_msg.msg"
     )
 endif()
 

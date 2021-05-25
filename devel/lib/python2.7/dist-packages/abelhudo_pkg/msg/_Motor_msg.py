@@ -13,8 +13,7 @@ class Motor_msg(genpy.Message):
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """uint16 pwm
 int16 dir
-uint16 motor
-"""
+uint16 motor"""
   __slots__ = ['pwm','dir','motor']
   _slot_types = ['uint16','int16','uint16']
 

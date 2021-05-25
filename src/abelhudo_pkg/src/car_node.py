@@ -68,7 +68,7 @@ def callback_sonar(data):
 
 def callback_encoder(data):
     global estado_encoder
-    estado_encoder = data.estado_encoder
+    estado_encoder = data.estado
 
 ''' PUBLISHERS '''
 def servo_angle(angle):
@@ -294,6 +294,7 @@ if __name__ == '__main__':
     count = 0              # Contagem do numero de transicoes do infravermelho do encoder
     dir = horario          # Direcao do motor
     flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
+    estado_encoder = 0
 
     # Variaveis Sonar
     flag_once_sonar = True # Variavel para setar o angulo do servo apenas uma vez

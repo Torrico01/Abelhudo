@@ -51,10 +51,10 @@
   "ffcccce422d555eeedf1005a7637b109")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<Servo_msg>)))
   "Returns full string definition for message of type '<Servo_msg>"
-  (cl:format cl:nil "uint16 angle~%~%~%"))
+  (cl:format cl:nil "uint16 angle~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'Servo_msg)))
   "Returns full string definition for message of type 'Servo_msg"
-  (cl:format cl:nil "uint16 angle~%~%~%"))
+  (cl:format cl:nil "uint16 angle~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <Servo_msg>))
   (cl:+ 0
      2

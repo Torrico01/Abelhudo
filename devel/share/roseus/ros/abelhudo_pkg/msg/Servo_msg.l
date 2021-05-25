@@ -53,7 +53,6 @@
 (setf (get abelhudo_pkg::Servo_msg :datatype-) "abelhudo_pkg/Servo_msg")
 (setf (get abelhudo_pkg::Servo_msg :definition-)
       "uint16 angle
-
 ")
 
 

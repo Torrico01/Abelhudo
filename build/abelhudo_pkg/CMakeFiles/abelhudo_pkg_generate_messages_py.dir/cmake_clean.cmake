@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "/home/pi/abelhudo_ws/devel/lib/python2.7/dist-packages/abelhudo_pkg/msg/_Encoder_msg.py"
   "/home/pi/abelhudo_ws/devel/lib/python2.7/dist-packages/abelhudo_pkg/msg/_Motor_msg.py"
   "/home/pi/abelhudo_ws/devel/lib/python2.7/dist-packages/abelhudo_pkg/msg/_Servo_msg.py"
   "/home/pi/abelhudo_ws/devel/lib/python2.7/dist-packages/abelhudo_pkg/msg/__init__.py"

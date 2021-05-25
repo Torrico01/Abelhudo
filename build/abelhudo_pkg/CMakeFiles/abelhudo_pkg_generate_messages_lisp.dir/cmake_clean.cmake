@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "/home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Encoder_msg.lisp"
   "/home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Motor_msg.lisp"
   "/home/pi/abelhudo_ws/devel/share/common-lisp/ros/abelhudo_pkg/msg/Servo_msg.lisp"
   "CMakeFiles/abelhudo_pkg_generate_messages_lisp"
