@@ -287,7 +287,7 @@ if __name__ == '__main__':
     rospy.loginfo("Carro iniciado.")
     rate = rospy.Rate(150) # ---------------- RATE ----------------
     # Configuracoes iniciais
-    GPIO.setup(encoderPIN, GPIO.IN)
+    #GPIO.setup(encoderPIN, GPIO.IN)
     #motor_array.direcao(horario, motor2)
 
     # Variaveis Encoder

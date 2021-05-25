@@ -36,6 +36,7 @@ class EncoderProp():
         #rospy.loginfo("Iniciando encoder...")
         #encoder = Encoder(gpio_encoder)
         #self.encoder_array.append(encoder)
+        GPIO.setup(encoderPIN, GPIO.IN)
         rospy.loginfo("Encoder configurado!")
 
         # Publishers
