@@ -13,21 +13,14 @@ import rospy
 import numpy as np
 import time as delay
 import RPi.GPIO as GPIO
+from random import seed
+from random import randint
 import matplotlib.pyplot as plt
 # Importando Mensagens ROS
 from sensor_msgs.msg import Range
 from abelhudo_pkg.msg import Servo_msg
 from abelhudo_pkg.msg import Motor_msg
 from abelhudo_pkg.msg import Encoder_msg
-# Importando Nodes Locais
-#from sonar_node import SonarProp
-#from motor_node import MotorProp
-#from servo_node import ServoProp
-# Importando Gerador de Numeros Aleatorios
-from random import randint
-from random import seed
-seed(3)
-
 # Desabilita Avisos da GPIO
 GPIO.setwarnings(False)
 
@@ -41,33 +34,22 @@ triggerPIN = 7
 echoPIN    = 11
 encoderPIN = 13
 
-''' INICIANDO NODES '''
+''' INICIANDO NODE '''
 rospy.init_node("abelhudo_node")
-
-#sonar_array = SonarProp(gpio_trigger = triggerPIN,
-#                        gpio_echo    = echoPIN,
-#                        range_min    = 0.05,
-#                        range_max    = 3)
-
-#motor_array = MotorProp(gpio_dir1 = 0,
-#                        gpio_dir2 = 0,
-#                        gpio_dir3 = motorDIR1,
-#                        gpio_dir4 = motorDIR2,
-#                        gpio_pwm1 = 0,
-#                        gpio_pwm2 = motorPWM,
-#                        use_m1 = False,
-#                        use_m2 = True)
-
-#servo_array = ServoProp(gpio_signal = servoPIN)
-
 
 ''' CALLBACKS '''
 def callback_sonar(data):
     global dist
+    global dist_ant
+    global dist_ant_2
+    dist_ant_2 = dist_ant
+    dist_ant = dist
     dist = round(data.range,2)
 
 def callback_encoder(data):
     global estado_encoder
+    global count_encoder
+    count_encoder += 1
     estado_encoder = data.estado
 
 ''' PUBLISHERS '''
@@ -93,9 +75,7 @@ motor2      =  2
 antihorario = -1
 parar       =  0
 horario     =  1
-pwm         =  0
-dist        =  0
-good_dist   =  False
+#good_dist   =  False
 
 
 ''' FUNCOES '''
@@ -129,10 +109,11 @@ def plot(theta, r):
     plt.close()
 
 '''
-# --- CODIGO SONAR - SEGUIDOR ---
+# --- CODIGO SONAR SEGUIDOR ---
+seed(3)
 def seguidor():
     global flag_once_sonar
-    global dist_anterior
+    global dist_ant
     global dir_sonar
     global state
     global angle
@@ -146,12 +127,12 @@ def seguidor():
             angle = angle
             flag_once_sonar = True # Flag que permite mandar posicao angular para o Servo
             state = "locked"
-        if (dist > MIN_DIST and dist_anterior > MIN_DIST):
+        if (dist > MIN_DIST and dist_ant > MIN_DIST):
             angle = randint(15, 75)
             flag_once_sonar = True
     # Estado de objeto detectado, esperando a distancia detectada ser maior que MIN_DIST
     elif (state == "locked"):
-        if (dist > MIN_DIST and dist_anterior > MIN_DIST):
+        if (dist > MIN_DIST and dist_ant > MIN_DIST):
             if check == 0:
                 if (dir_sonar == horario):
                     angle += 20
@@ -208,7 +189,7 @@ def seguidor():
         servo_array.angulo(angle) # Manda a posicao angular para o servo (0-90)
         flag_once_sonar = False
 
-    dist_anterior = dist # Variavel para checar duas vezes uma mesma distancia
+    dist_ant = dist # Variavel para checar duas vezes uma mesma distancia
 
     return
 
@@ -271,6 +252,33 @@ def encoder():
 
     return
 '''
+
+def reta1(action):
+    global count
+    global dist
+    global dist_ant
+    global dist_ant_2
+
+    while (dist > 0.35 and dist_ant > 0.35 and dist_ant_2 > 0.35):
+        action(50, horario, motor2) #set_motor_prop_once(50, horario, motor2) #pwm, dir, motor
+
+    return
+
+def run_once(f):
+    def wrapper(*args, **kwargs):
+        if not wrapper.has_run:
+            wrapper.has_run = True
+            return f(*args, **kwargs)
+    wrapper.has_run = False
+    return wrapper
+
+@run_once
+def set_motor_prop_once(pwm, dir, motor):
+    #motor_prop(pwm, dir, motor)
+    rospy.loginfo("Executado Uma Vez!!!")
+    return
+
+
 if __name__ == '__main__':
     ''' Subscribers '''
     rospy.Subscriber("/Abelhudo/Sonar", Range, callback_sonar)
@@ -285,41 +293,32 @@ if __name__ == '__main__':
 
     ''' Inicializacao '''
     rospy.loginfo("Carro iniciado.")
+    servo_angle(45)
     rate = rospy.Rate(150) # ---------------- RATE ----------------
-    # Configuracoes iniciais
-    #GPIO.setup(encoderPIN, GPIO.IN)
-    #motor_array.direcao(horario, motor2)
 
-    # Variaveis Encoder
-    count = 0              # Contagem do numero de transicoes do infravermelho do encoder
+    ''' Variaveis Globais '''
+    # Variaveis Encoder        
     dir = horario          # Direcao do motor
+    count_encoder = 0      # Contagem do numero de transicoes do infravermelho do encoder
+    estado_encoder = 0     # Estado recebido por subscriber do encoder_node
     flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
-    estado_encoder = 0
 
     # Variaveis Sonar
     flag_once_sonar = True # Variavel para setar o angulo do servo apenas uma vez
     dir_sonar = horario    # Direcao de giro do servo
     state = "searching"    # Estado do sonar
-    dist_anterior = 0      # Variavel para fazer verificacao dupla do sonar
+    dist_ant_2 = 1.0       # Variavel para fazer verificacao tripla do sonar
+    dist_ant = 1.0         # Variavel para fazer verificacao dupla do sonar
     MIN_DIST = 0.2         # Constante da distancia minima do estado locked (20 cm)
     angle = 45             # Angulo do servo
     check = 0              # Variavel para checar quatro vezes antes de sair do estado locked
+    dist =  0              # Distancia global recebida pelo subscriber do sonar_node
+
+    action = run_once(set_motor_prop_once)
 
     while not rospy.is_shutdown():
-        #seguidor()
-        servo_angle(55)
-        motor_prop(50, horario, motor2)
-        delay.sleep(0.7)
-
-        motor_prop(0, parar, motor2)
-        delay.sleep(0.7)
-
-        servo_angle(35)
-        motor_prop(50, antihorario, motor2)
-        delay.sleep(0.7)
-
-        motor_prop(0, parar, motor2)
-        delay.sleep(0.7)
+        reta1(action)
+        action.has_run = False
 
         rate.sleep()
 

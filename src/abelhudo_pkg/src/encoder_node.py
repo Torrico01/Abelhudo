@@ -43,7 +43,7 @@ class EncoderProp():
         topic_name = "/Abelhudo/Encoder"
         pub = rospy.Publisher(topic_name, Encoder_msg, queue_size=5)
         self.pub_array.append(pub)
-        rospy.loginfo("Publicando recepcao do sonar em /Abelhudo/Encoder")
+        rospy.loginfo("Publicando recepcao do encoder em /Abelhudo/Encoder")
 
         message = Encoder_msg()
         self._message  = message

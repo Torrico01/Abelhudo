@@ -60,7 +60,7 @@ class SonarProp():
         self._message.range = range_cm*0.01
         self.pub_array[0].publish(self._message)
 
-        rospy.loginfo("Distancia: %.2f m"%range_array[0])
+        rospy.loginfo_throttle(0.25,"Distancia: %.2f m"%range_array[0])
 
     def run(self):
         #--- Set the control rate
@@ -83,7 +83,7 @@ if __name__ == '__main__':
                             gpio_echo    = echoPIN,
                             range_min    = 0.05,
                             range_max    = 3.5)
-    rate = rospy.Rate(15) # --------------- RATE ---------------
+    rate = rospy.Rate(40) # --------------- RATE ---------------
     # Loop
     while not rospy.is_shutdown():
         sonar_array.scan()
