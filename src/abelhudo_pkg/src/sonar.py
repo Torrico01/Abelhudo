@@ -44,8 +44,11 @@ class Sonar():
         pulse_start_time = time.time()
         pulse_end_time = time.time()
         #--- Wait for the answer
+        time_0 = time.time()
         while GPIO.input(self._gpio_echo)==0:
             pulse_start_time = time.time()
+            if (pulse_start_time - time_0 > 0.1):
+                return(-1)
 
         time0= time.time()
         while GPIO.input(self._gpio_echo)==1:

@@ -77,6 +77,26 @@ parar       =  0
 horario     =  1
 #good_dist   =  False
 
+''' Variaveis Globais '''
+# Variaveis Encoder
+dir = horario          # Direcao do motor
+count_encoder = 0      # Contagem do numero de transicoes do infravermelho do encoder
+estado_encoder = 0     # Estado recebido por subscriber do encoder_node
+flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
+
+# Variaveis Sonar
+set_prop_once = True   # Variavel para setar o motor apenas uma vez
+flag_once_sonar = True # Variavel para setar o angulo do servo apenas uma vez
+dir_sonar = horario    # Direcao de giro do servo
+state = "searching"    # Estado do sonar
+dist_ant_2 = 1.0       # Variavel para fazer verificacao tripla do sonar
+dist_ant = 1.0         # Variavel para fazer verificacao dupla do sonar
+MIN_DIST = 0.2         # Constante da distancia minima do estado locked (20 cm)
+angle = 45             # Angulo do servo
+check = 0              # Variavel para checar quatro vezes antes de sair do estado locked
+dist =  0              # Distancia global recebida pelo subscriber do sonar_node
+
+
 
 ''' FUNCOES '''
 "servo_angle(angle)"
@@ -253,30 +273,25 @@ def encoder():
     return
 '''
 
-def reta1(action):
+def reta1():
     global count
     global dist
     global dist_ant
     global dist_ant_2
+    global set_prop_once
 
-    while (dist > 0.35 and dist_ant > 0.35 and dist_ant_2 > 0.35):
-        action(50, horario, motor2) #set_motor_prop_once(50, horario, motor2) #pwm, dir, motor
+    if (dist > 0.35 and dist_ant > 0.35 and dist_ant_2 > 0.35):
+        if (set_prop_once):
+            #set_motor_prop_once(50, horario, motor2) #pwm, dir, motor
+            rospy.loginfo("Motor 2 em 50 pwm, sentido horario.")
+            set_prop_once = False
+    if (dist < 0.35 and dist_ant < 0.35 and dist_ant_2 < 0.35):
+        if (set_prop_once == False):
+            rospy.loginfo("Motor 2 em 0 pwm, parando.")
+            set_prop_once = True
 
-    return
+    return()
 
-def run_once(f):
-    def wrapper(*args, **kwargs):
-        if not wrapper.has_run:
-            wrapper.has_run = True
-            return f(*args, **kwargs)
-    wrapper.has_run = False
-    return wrapper
-
-@run_once
-def set_motor_prop_once(pwm, dir, motor):
-    #motor_prop(pwm, dir, motor)
-    rospy.loginfo("Executado Uma Vez!!!")
-    return
 
 
 if __name__ == '__main__':
@@ -297,13 +312,14 @@ if __name__ == '__main__':
     rate = rospy.Rate(150) # ---------------- RATE ----------------
 
     ''' Variaveis Globais '''
-    # Variaveis Encoder        
+    # Variaveis Encoder
     dir = horario          # Direcao do motor
     count_encoder = 0      # Contagem do numero de transicoes do infravermelho do encoder
     estado_encoder = 0     # Estado recebido por subscriber do encoder_node
     flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
 
     # Variaveis Sonar
+    set_prop_once = True   # Variavel para setar o motor apenas uma vez
     flag_once_sonar = True # Variavel para setar o angulo do servo apenas uma vez
     dir_sonar = horario    # Direcao de giro do servo
     state = "searching"    # Estado do sonar
@@ -314,11 +330,9 @@ if __name__ == '__main__':
     check = 0              # Variavel para checar quatro vezes antes de sair do estado locked
     dist =  0              # Distancia global recebida pelo subscriber do sonar_node
 
-    action = run_once(set_motor_prop_once)
 
     while not rospy.is_shutdown():
-        reta1(action)
-        action.has_run = False
+        reta1()
 
         rate.sleep()
 
