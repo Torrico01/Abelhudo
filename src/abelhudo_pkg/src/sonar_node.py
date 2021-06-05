@@ -60,8 +60,8 @@ class SonarProp():
         self._message.range = range_cm*0.01
         self.pub_array[0].publish(self._message)
 
-        #rospy.loginfo_throttle(0.1,"Distancia: %.2f m"%range_array[0])
-        rospy.loginfo("Distancia: %.2f m"%range_array[0])
+        rospy.loginfo_throttle(0.1,"Distancia: %.2f m"%range_array[0])
+        #rospy.loginfo("Distancia: %.2f m"%range_array[0])
 
 
     def run(self):

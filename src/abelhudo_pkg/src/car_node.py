@@ -68,7 +68,6 @@ def motor_prop(pwm, dir, motor):
     pub_motor.publish(message_motor)
 
 
-
 ''' VARIAVEIS GERAIS '''
 motor1      =  1
 motor2      =  2
@@ -85,7 +84,6 @@ estado_encoder = 0     # Estado recebido por subscriber do encoder_node
 flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
 
 # Variaveis Sonar
-set_prop_once = True   # Variavel para setar o motor apenas uma vez
 flag_once_sonar = True # Variavel para setar o angulo do servo apenas uma vez
 dir_sonar = horario    # Direcao de giro do servo
 state = "searching"    # Estado do sonar
@@ -95,7 +93,6 @@ MIN_DIST = 0.2         # Constante da distancia minima do estado locked (20 cm)
 angle = 45             # Angulo do servo
 check = 0              # Variavel para checar quatro vezes antes de sair do estado locked
 dist =  0              # Distancia global recebida pelo subscriber do sonar_node
-
 
 
 ''' FUNCOES '''
@@ -273,24 +270,42 @@ def encoder():
     return
 '''
 
-def reta1():
-    global count
-    global dist
-    global dist_ant
+def reta1(set_motor_prop_once, count_encoder_estados): # forwards
+    global count_encoder
     global dist_ant_2
-    global set_prop_once
-
+    global dist_ant
+    global dist
+    estado = "reta1"
     if (dist > 0.35 and dist_ant > 0.35 and dist_ant_2 > 0.35):
-        if (set_prop_once):
-            #set_motor_prop_once(50, horario, motor2) #pwm, dir, motor
+        if (set_motor_prop_once):
+            motor_prop(50, horario, motor2) #pwm, dir, motor
             rospy.loginfo("Motor 2 em 50 pwm, sentido horario.")
-            set_prop_once = False
+            set_motor_prop_once = False
     if (dist < 0.35 and dist_ant < 0.35 and dist_ant_2 < 0.35):
-        if (set_prop_once == False):
+        if (set_motor_prop_once == False):
+            motor_prop(0, parar, motor2) #pwm, dir, motor
             rospy.loginfo("Motor 2 em 0 pwm, parando.")
-            set_prop_once = True
+            set_motor_prop_once = True
+            count_encoder_estados = count_encoder
+            estado = "reta2"
+            count_encoder = 0
+            delay.sleep(0.8)
+    return(estado, set_motor_prop_once, count_encoder_estados)
 
-    return()
+def reta2(set_motor_prop_once, count_encoder_estados): #backwards
+    global count_encoder
+    estado = "reta2"
+    if (count_encoder < count_encoder_estados):
+        if (set_motor_prop_once):
+            motor_prop(50, antihorario, motor2) #pwm, dir, motor
+            rospy.loginfo("Motor 2 em 50 pwm, sentido antihorario.")
+            set_motor_prop_once = False
+    else:
+        if (set_motor_prop_once == False):
+            motor_prop(0, parar, motor2) #pwm, dir, motor
+            rospy.loginfo("Motor 2 em 0 pwm, parando.")
+            set_motor_prop_once = True
+    return(estado, set_motor_prop_once, count_encoder_estados)
 
 
 
@@ -311,29 +326,17 @@ if __name__ == '__main__':
     servo_angle(45)
     rate = rospy.Rate(150) # ---------------- RATE ----------------
 
-    ''' Variaveis Globais '''
-    # Variaveis Encoder
-    dir = horario          # Direcao do motor
-    count_encoder = 0      # Contagem do numero de transicoes do infravermelho do encoder
-    estado_encoder = 0     # Estado recebido por subscriber do encoder_node
-    flag_once_motor = True # Variavel para setar a potencia do motor apenas uma vez
-
-    # Variaveis Sonar
-    set_prop_once = True   # Variavel para setar o motor apenas uma vez
-    flag_once_sonar = True # Variavel para setar o angulo do servo apenas uma vez
-    dir_sonar = horario    # Direcao de giro do servo
-    state = "searching"    # Estado do sonar
-    dist_ant_2 = 1.0       # Variavel para fazer verificacao tripla do sonar
-    dist_ant = 1.0         # Variavel para fazer verificacao dupla do sonar
-    MIN_DIST = 0.2         # Constante da distancia minima do estado locked (20 cm)
-    angle = 45             # Angulo do servo
-    check = 0              # Variavel para checar quatro vezes antes de sair do estado locked
-    dist =  0              # Distancia global recebida pelo subscriber do sonar_node
-
+    ''' Variaveis locais '''
+    set_motor_prop_once = True   # Variavel para setar o motor apenas uma vez
+    count_encoder_estados = 0    # Variavel para contagem do numero de passos do encoder entre estados
+    # Transformar num array ^^^^
+    estado = "reta1"
 
     while not rospy.is_shutdown():
-        reta1()
-
+        if (estado == "reta1"):
+            estado, set_motor_prop_once, count_encoder_estados = reta1(set_motor_prop_once, count_encoder_estados)
+        elif (estado == "reta2"):
+            estado, set_motor_prop_once, count_encoder_estados = reta2(set_motor_prop_once, count_encoder_estados)
         rate.sleep()
 
 
