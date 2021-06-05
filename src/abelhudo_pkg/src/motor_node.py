@@ -24,8 +24,8 @@ GPIO.setwarnings(False)
 motorDIR1  = 40
 motorDIR2  = 38
 motorPWM   = 36
-pwm   = 0  # 0 - 100
-dir   = 0  # 1 ou -1
+pwm   = 0  # 0 -> 100
+dir   = 0  # 1 (horario), 0 (parando), ou -1 (antihorario)
 motor = 0  # 1 ou 2
 
 
@@ -34,9 +34,12 @@ def callback_motor(data):
     global pwm
     global dir
     global motor
-    pwm = data.pwm
-    dir = data.dir
-    motor = data.motor
+    if (pwm == data.pwm and dir == data.dir and motor == data.motor):
+        pass
+    else:
+        pwm = data.pwm
+        dir = data.dir
+        motor = data.motor
 
 
 class MotorProp():
