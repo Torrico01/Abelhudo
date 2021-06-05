@@ -34,12 +34,9 @@ def callback_motor(data):
     global pwm
     global dir
     global motor
-    if (pwm == data.pwm and dir == data.dir and motor == data.motor):
-        pass
-    else:
-        pwm = data.pwm
-        dir = data.dir
-        motor = data.motor
+    pwm = data.pwm
+    dir = data.dir
+    motor = data.motor
 
 
 class MotorProp():
@@ -69,15 +66,15 @@ class MotorProp():
         # motor = 1: left motor; motor = 2: right motor
         self.motor_array[0].set_direction(dir, motor)
         if (dir == -1):
-            rospy.loginfo("Motor %d setado em anti-horario"%motor)
+            rospy.loginfo_throttle(1, "Motor %d setado em anti-horario"%motor)
         if (dir == 0):
-            rospy.loginfo("Motor %d setado para parar"%motor)
+            rospy.loginfo_throttle(1, "Motor %d setado para parar"%motor)
         if (dir == 1):
-            rospy.loginfo("Motor %d setado em horario"%motor)
+            rospy.loginfo_throttle(1, "Motor %d setado em horario"%motor)
 
     def potencia(self, dc, motor):
         self.motor_array[0].set_dutycycle(dc, motor)
-        rospy.loginfo("Motor %s com ducycycle de %s%%" % (motor,dc))
+        rospy.loginfo_throttle(1, "Motor %s com ducycycle de %s%%" % (motor,dc))
 
     def run(self):
         #--- Set the control rate
@@ -106,9 +103,7 @@ if __name__ == '__main__':
     rate = rospy.Rate(150) # --------------- RATE ---------------
     # Loop
     while not rospy.is_shutdown():
-        if motor > 0:
-            motor_array.direcao(dir, motor)
-            motor_array.potencia(pwm, motor)
-            motor = 0
+        motor_array.direcao(dir, motor)
+        motor_array.potencia(pwm, motor)
     GPIO.cleanup()
     rospy.loginfo("Interrompendo: motor_node.")

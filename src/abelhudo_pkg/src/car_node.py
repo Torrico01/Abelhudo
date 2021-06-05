@@ -277,26 +277,24 @@ def reta1(count_encoder_estados): # forwards
     global dist
     estado = "reta1"
     if (dist > 0.35 and dist_ant > 0.35 and dist_ant_2 > 0.35):
-        motor_prop(50, horario, motor2) #pwm, dir, motor
-        rospy.loginfo("Motor 2 em 50 pwm, sentido horario.")
+        motor_prop(70, antihorario, motor2) #pwm, dir, motor
     if (dist < 0.35 and dist_ant < 0.35 and dist_ant_2 < 0.35):
         motor_prop(0, parar, motor2) #pwm, dir, motor
-        rospy.loginfo("Motor 2 em 0 pwm, parando.")
         count_encoder_estados = count_encoder
         estado = "reta2"
         count_encoder = 0
-        delay.sleep(0.8)
+        delay.sleep(1)
     return(estado, count_encoder_estados)
 
 def reta2(count_encoder_estados): #backwards
     global count_encoder
     estado = "reta2"
     if (count_encoder < count_encoder_estados):
-        motor_prop(50, antihorario, motor2) #pwm, dir, motor
-        rospy.loginfo("Motor 2 em 50 pwm, sentido antihorario.")
+        motor_prop(70, horario, motor2) #pwm, dir, motor
+        #rospy.loginfo("Motor 2 em 50 pwm, sentido antihorario.")
     else:
         motor_prop(0, parar, motor2) #pwm, dir, motor
-        rospy.loginfo("Motor 2 em 0 pwm, parando.")
+        #rospy.loginfo("Motor 2 em 0 pwm, parando.")
     return(estado, count_encoder_estados)
 
 
