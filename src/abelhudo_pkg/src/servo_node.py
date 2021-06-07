@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Software License Agreement (BSD License)
 #
-# Copyright (c) 2009, Tictor's Lab, Inc.
+# Copyright (c) 2021, Tictor's Lab, Inc.
 # All rights reserved.
 
 """ Codigo teorico independente da GPIO do Raspberry, apenas trabalhando com ROS"""
@@ -22,13 +22,18 @@ GPIO.setwarnings(False)
 
 # Variaveis Globais / Pinos
 servoPIN   = 3
-angle = -1 # 0 - 90
+old_agle = -1
+angle = -1 # 0 -> 90
 
 
 ''' CALLBACKS '''
 def callback_servo(data):
     global angle
-    angle = data.angle
+    global old_angle
+    if data.angle == old_angle:
+        pass
+    else:
+        angle = data.angle
 
 
 class ServoProp():
@@ -75,8 +80,8 @@ if __name__ == '__main__':
     rate = rospy.Rate(150) # --------------- RATE ---------------
     # Loop
     while not rospy.is_shutdown():
-        if angle > 0:
+        if angle is not old_angle:
             servo_array.angulo(angle)
-            angle = -1
+            old_angle = angle
     GPIO.cleanup()
     rospy.loginfo("Interrompendo: servo_node.")
