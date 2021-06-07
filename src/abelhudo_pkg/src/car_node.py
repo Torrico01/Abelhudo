@@ -123,21 +123,34 @@ def start_mapa():
     global dist
     global dist_ant
     global dist_ant_2
-    mapa = []
-    # Olha para a direita
-    for i in range 5:
-        servo_angle(1)
-    delay.sleep(0.2)
-    mean_dist = round((dist + dist_ant + dist_ant_2) / 3)
-    if (dist < 1.5):
-        mapa.append((0,mean_dist*100))
+    mapa = [(0,0)]
     # Olha para a esquerda
-    for i in range 5:
-        servo_angle(89)
-    delay.sleep(0.2)
-    mean_dist = round((dist + dist_ant + dist_ant_2) / 3)
+    for i in range(0,50):
+        servo_angle(1)
+        delay.sleep(0.01)
+        servo_angle(2)
+    delay.sleep(0.5)
+    while(dist is not dist_ant and dist is not dist_ant_2):
+        if (dist > 1.5 and dist_ant > 1.5 and dist_ant_2 > 1.5):
+            break
     if (dist < 1.5):
-        mapa.append((0,-mean_dist*100))
+        mapa.append((0,-dist*100))
+    # Olha para o meio
+    #for i in range(0,50):
+    #    servo_angle(45)
+    #    delay.sleep(0.01)
+    #    servo_angle(46)
+    # Olha para a direita
+    for i in range(0,50):
+        servo_angle(89)
+        delay.sleep(0.01)
+        servo_angle(88)
+    delay.sleep(0.5)
+    while(dist is not dist_ant and dist is not dist_ant_2):
+        if (dist > 1.5 and dist_ant > 1.5 and dist_ant_2 > 1.5):
+            break
+    if (dist < 1.5):
+        mapa.append((0,dist*100))
     return mapa
 
 def plot_mapa(mapa):
@@ -148,8 +161,7 @@ def plot_mapa(mapa):
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
     ax.grid(True)
-    ax.set_title("Sonar capture plot", va='bottom')
-    plt.scatter(0,0)
+    ax.set_title("Mapa", va='bottom')
     plt.scatter(*zip(*mapa))
     plt.savefig('/home/pi/abelhudo_ws/src/abelhudo_pkg/src/foo.png')
     plt.close()
@@ -183,7 +195,6 @@ def backwards(count_encoder_estados): #backwards
 
 def record(mapa):
     global dist
-    
     return mapa
 
 
@@ -205,15 +216,17 @@ if __name__ == '__main__':
     rospy.loginfo("Carro iniciado.")
     servo_angle(45)
     rate = rospy.Rate(150) # ---------------- RATE ----------------
+    delay.sleep(1)
 
     ''' Variaveis locais '''
     count_encoder_estados = 0    # Variavel para contagem do numero de passos do encoder entre estados
     # Transformar num array ^^^^
     estado = "reta1"
     mapa = start_mapa()
-    plot_mapa()
+    plot_mapa(mapa)
 
     while not rospy.is_shutdown():
+        servo_angle(45)
         #if (estado == "reta1"):
         #    estado, count_encoder_estados = get_length(count_encoder_estados)
         #elif (estado == "reta2"):

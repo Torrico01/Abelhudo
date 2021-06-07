@@ -22,7 +22,7 @@ GPIO.setwarnings(False)
 
 # Variaveis Globais / Pinos
 servoPIN   = 3
-old_agle = -1
+old_angle = -1
 angle = -1 # 0 -> 90
 
 
