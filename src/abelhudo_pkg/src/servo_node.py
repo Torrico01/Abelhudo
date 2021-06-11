@@ -22,18 +22,13 @@ GPIO.setwarnings(False)
 
 # Variaveis Globais / Pinos
 servoPIN   = 3
-old_angle = -1
 angle = -1 # 0 -> 90
 
 
 ''' CALLBACKS '''
 def callback_servo(data):
     global angle
-    global old_angle
-    if data.angle == old_angle:
-        pass
-    else:
-        angle = data.angle
+    angle = data.angle
 
 
 class ServoProp():
@@ -76,12 +71,10 @@ if __name__ == '__main__':
     rospy.loginfo("Iniciando node do servo...")
     rospy.init_node("servo_node")
     servo_array = ServoProp(gpio_signal = servoPIN)
-    servo_array.angulo(45)
     rate = rospy.Rate(150) # --------------- RATE ---------------
+    angle = 45
     # Loop
     while not rospy.is_shutdown():
-        if angle is not old_angle:
-            servo_array.angulo(angle)
-            old_angle = angle
+        servo_array.angulo(angle)
     GPIO.cleanup()
     rospy.loginfo("Interrompendo: servo_node.")
