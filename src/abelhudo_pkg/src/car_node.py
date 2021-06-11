@@ -17,7 +17,7 @@ from random import seed
 from random import randint
 import matplotlib.pyplot as plt
 # Importando Mensagens ROS
-from sensor_msgs.msg import Range
+from sensor_msgs.msg  import Range
 from abelhudo_pkg.msg import Servo_msg
 from abelhudo_pkg.msg import Motor_msg
 from abelhudo_pkg.msg import Encoder_msg
@@ -93,61 +93,28 @@ dist =  0              # Distancia global recebida pelo subscriber do sonar_node
 
 ''' FUNCOES '''
 
-def pol2cart(theta, r):
-    x = r * np.cos(theta)
-    y = r * np.sin(theta)
-    return(x, y)
-
-def plot(theta, r):
-    for i in range(len(r)):
-        if r[i] > 1.5:
-            np.delete(r,i,i-1)
-            np.delete(theta,i,i-1)
-    x, y = pol2cart(theta, r)
-
-    fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1)
-    ax.spines['left'].set_position(('data', 0.0))
-    ax.spines['bottom'].set_position(('data', 0.0))
-    ax.spines['right'].set_color('none')
-    ax.spines['top'].set_color('none')
-    ax.grid(True)
-    ax.set_title("Mapa", va='bottom')
-
-    plt.scatter(x,y) #(x, y, 'b-', 0, 0, 'ro')
-    plt.scatter(0,0)
-    plt.savefig('/home/pi/teste_ws/src/package_test/scripts/foo.png')
-    plt.close()
-
 def start_mapa():
     global dist
     global dist_ant
     global dist_ant_2
     mapa = [(0,0)]
-    # Olha para a esquerda
+    # Olha para a direita ---
     for i in range(0,50):
         servo_angle(1)
         delay.sleep(0.01)
         servo_angle(2)
-    delay.sleep(0.5)
     while(dist is not dist_ant and dist is not dist_ant_2):
-        if (dist > 1.5 and dist_ant > 1.5 and dist_ant_2 > 1.5):
+        if (dist > 1.75 and dist_ant > 1.75 and dist_ant_2 > 1.75):
             break
     if (dist < 1.5):
         mapa.append((0,-dist*100))
-    # Olha para o meio
-    #for i in range(0,50):
-    #    servo_angle(45)
-    #    delay.sleep(0.01)
-    #    servo_angle(46)
-    # Olha para a direita
+    # Olha para a esquerda ---
     for i in range(0,50):
         servo_angle(89)
         delay.sleep(0.01)
         servo_angle(88)
-    delay.sleep(0.5)
     while(dist is not dist_ant and dist is not dist_ant_2):
-        if (dist > 1.5 and dist_ant > 1.5 and dist_ant_2 > 1.5):
+        if (dist > 1.75 and dist_ant > 1.75 and dist_ant_2 > 1.75):
             break
     if (dist < 1.5):
         mapa.append((0,dist*100))
@@ -173,30 +140,53 @@ def get_length(count_encoder_estados): # forwards
     global dist_ant
     global dist
     estado = "reta1"
+    lado = antihorario
     if (dist > 0.35 and dist_ant > 0.35 and dist_ant_2 > 0.35):
-        motor_prop(70, antihorario, motor2) #pwm, dir, motor
+        motor_prop(70, lado, motor2) #pwm, dir, motor
     if (dist < 0.35 and dist_ant < 0.35 and dist_ant_2 < 0.35):
         motor_prop(0, parar, motor2) #pwm, dir, motor
         count_encoder_estados = count_encoder
-        estado = "reta2"
         count_encoder = 0
+        estado = "reta2"
         delay.sleep(1)
-    return(estado, count_encoder_estados)
+    return(estado, lado, count_encoder_estados)
 
 def backwards(count_encoder_estados): #backwards
     global count_encoder
     estado = "reta2"
-    servo_angle(89)
+    lado = horario
+    servo_angle(89) # Esquerda
+    servo_angle(88) #
     if (count_encoder < count_encoder_estados):
-        motor_prop(70, horario, motor2) #pwm, dir, motor
+        motor_prop(70, lado, motor2) #pwm, dir, motor
     else:
         motor_prop(0, parar, motor2) #pwm, dir, motor
-    return(estado, count_encoder_estados)
+        #count_encoder_estados = count_encoder
+        count_encoder = 0
+        estado = "reta3"
+        delay.sleep(1)
+    return(estado, lado, count_encoder_estados)
 
-def record(mapa):
+def forwards(count_encoder_estados): #forwards
+    global count_encoder
+    estado = "reta3"
+    lado = antihorario
+    servo_angle(1) # Direita
+    servo_angle(2) #
+    if (count_encoder < count_encoder_estados):
+        motor_prop(70, lado, motor2) #pwm, dir, motor
+    else:
+        motor_prop(0, parar, motor2) #pwm, dir, motor
+        estado = "plotar"
+    return(estado, lado, count_encoder_estados)
+
+def record(mapa, lado, estado_encoder_anterior):
+    global estado_encoder
+    global count_encoder
     global dist
-    return mapa
-
+    if (estado_encoder is not estado_encoder_anterior):
+        mapa.append((count_encoder*1.3158, lado*100*dist)) # ~ 19 counts/25 cm = 1 count / 1,3158 cm
+    return mapa, estado_encoder_anterior
 
 if __name__ == '__main__':
 
@@ -221,17 +211,25 @@ if __name__ == '__main__':
     ''' Variaveis locais '''
     count_encoder_estados = 0    # Variavel para contagem do numero de passos do encoder entre estados
     # Transformar num array ^^^^
+    estado_encoder_anterior = 0
     estado = "reta1"
     mapa = start_mapa()
-    plot_mapa(mapa)
+    servo_angle(45)
+    delay.sleep(0.2)
 
     while not rospy.is_shutdown():
-        servo_angle(45)
-        #if (estado == "reta1"):
-        #    estado, count_encoder_estados = get_length(count_encoder_estados)
-        #elif (estado == "reta2"):
-        #    estado, count_encoder_estados = backwards(count_encoder_estados)
-        #    mapa = record(mapa)
+        if (estado == "reta1"):
+            estado, lado, count_encoder_estados = get_length(count_encoder_estados)
+        elif (estado == "reta2"):
+            estado, lado, count_encoder_estados = backwards(count_encoder_estados)
+            mapa, estado_encoder_anterior = record(mapa, lado, estado_encoder_anterior)
+        elif (estado == "reta3"):
+            estado, lado, count_encoder_estados = forwards(count_encoder_estados)
+            mapa, estado_encoder_anterior = record(mapa, lado, estado_encoder_anterior)
+        elif (estado == "plotar"):
+            plot_mapa(mapa)
+            servo_angle(45)
+            estado = "parado"
 
         rate.sleep()
 

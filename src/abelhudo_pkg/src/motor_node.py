@@ -28,7 +28,6 @@ pwm   = 0  # 0 -> 100
 dir   = 0  # 1 (horario), 0 (parando), ou -1 (antihorario)
 motor = 0  # 1 ou 2
 
-
 ''' CALLBACKS '''
 def callback_motor(data):
     global pwm
@@ -37,7 +36,6 @@ def callback_motor(data):
     pwm = data.pwm
     dir = data.dir
     motor = data.motor
-
 
 class MotorProp():
     def __init__(self,
