@@ -101,7 +101,7 @@ def start_mapa():
     # Olha para a direita ---
     for i in range(0,50):
         servo_angle(1)
-        delay.sleep(0.01)
+        delay.sleep(0.04)
         servo_angle(2)
     while(dist is not dist_ant and dist is not dist_ant_2):
         if (dist > 1.75 and dist_ant > 1.75 and dist_ant_2 > 1.75):
@@ -111,7 +111,7 @@ def start_mapa():
     # Olha para a esquerda ---
     for i in range(0,50):
         servo_angle(89)
-        delay.sleep(0.01)
+        delay.sleep(0.04)
         servo_angle(88)
     while(dist is not dist_ant and dist is not dist_ant_2):
         if (dist > 1.75 and dist_ant > 1.75 and dist_ant_2 > 1.75):
@@ -164,7 +164,11 @@ def backwards(count_encoder_estados): #backwards
         #count_encoder_estados = count_encoder
         count_encoder = 0
         estado = "reta3"
-        delay.sleep(1)
+        delay.sleep(0.5)
+        for i in range(0,50):
+            servo_angle(1)
+            delay.sleep(0.04)
+            servo_angle(2)
     return(estado, lado, count_encoder_estados)
 
 def forwards(count_encoder_estados): #forwards
@@ -214,8 +218,10 @@ if __name__ == '__main__':
     estado_encoder_anterior = 0
     estado = "reta1"
     mapa = start_mapa()
-    servo_angle(45)
-    delay.sleep(0.2)
+    for i in range(0,50):
+        servo_angle(45)
+        delay.sleep(0.04)
+        servo_angle(46)
 
     while not rospy.is_shutdown():
         if (estado == "reta1"):
@@ -228,7 +234,10 @@ if __name__ == '__main__':
             mapa, estado_encoder_anterior = record(mapa, lado, estado_encoder_anterior)
         elif (estado == "plotar"):
             plot_mapa(mapa)
-            servo_angle(45)
+            for i in range(0,50):
+                servo_angle(46)
+                delay.sleep(0.04)
+                servo_angle(45)
             estado = "parado"
 
         rate.sleep()
